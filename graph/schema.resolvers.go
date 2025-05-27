@@ -211,6 +211,9 @@ func (r *mutationResolver) CreateComment(ctx context.Context, input model.Commen
 	if len(input.Content) == 0 {
 		return nil, fmt.Errorf("content is required")
 	}
+	if len(input.Content) > 2000 {
+		return nil, fmt.Errorf("content is too long")
+	}
 	var err error
 
 	var ParentId int
@@ -285,6 +288,9 @@ func (r *mutationResolver) UpdateComment(ctx context.Context, id string, content
 
 	if len(content) == 0 {
 		return nil, fmt.Errorf("content is required")
+	}
+	if len(content) > 2000 {
+		return nil, fmt.Errorf("content is too long")
 	}
 
 	commentId, err := strconv.Atoi(id)
