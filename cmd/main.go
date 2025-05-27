@@ -29,20 +29,33 @@ func main() {
 		port = defaultPort
 	}
 
+	deployType := flag.String("d", "", "deploy type (d (in Docker) or n (native))")
 	storageType := flag.String("s", "", "storage type (m (in memory) or p (postgres))")
+
 	flag.Parse()
 	if *storageType != "m" && *storageType != "p" {
 		fmt.Println("-s flag must be 'm' or 'p'")
 		flag.Usage()
 		os.Exit(1)
 	}
+	if *deployType != "d" && *deployType != "n" {
+		fmt.Println("-d flag must be 'd' or 'n'")
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	var userRepo graph.UserRepoInterface
 	var resolver *graph.Resolver
+	var Host string
+	if *deployType == "d" {
+		Host = "db"
+	} else {
+		Host = "localhost"
+	}
 
 	if *storageType == "p" {
 		pg, err := db.InitDB(db.DBConfig{
-			Host:     "localhost",
+			Host:     Host,
 			Port:     "5432",
 			User:     "postgres",
 			Password: "postgres",
