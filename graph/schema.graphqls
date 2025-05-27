@@ -1,0 +1,55 @@
+directive @isAuthenticated on FIELD_DEFINITION
+
+type User {
+  id: ID!
+  username: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  user: User!
+  commentable: Boolean!
+  comments: [Comment!]!
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  user: User!
+  parentId: ID
+  postId: ID!
+}
+
+input PostInput {
+  title: String!
+  content: String!
+  commentable: Boolean!
+}
+
+input CommentInput {
+  postId: ID!
+  parentId: ID
+  content: String!
+}
+
+type Query {
+  posts(limit: Int = 10, offset: Int = 0): [Post!]! @isAuthenticated
+  postsByUser(limit: Int = 10, offset: Int = 0, userId: ID!): [Post!]! @isAuthenticated
+  post(id: ID!): Post @isAuthenticated
+  comments(limit: Int = 10, offset: Int = 0, postId: ID!): [Comment!]! @isAuthenticated
+}
+
+type Mutation {
+  createPost(input: PostInput!): Post! @isAuthenticated
+  updatePost(id: ID!, input: PostInput!): Post! @isAuthenticated
+  deletePost(id: ID!): Boolean! @isAuthenticated
+  createComment(input: CommentInput!): Comment! @isAuthenticated
+  updateComment(id: ID!, content: String!): Comment! @isAuthenticated
+  deleteComment(id: ID!): Boolean! @isAuthenticated
+}
+
+type Subscription {
+  newComments(postId: ID!): Comment! @isAuthenticated
+}
