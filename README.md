@@ -1,13 +1,21 @@
 # ozon_intern_task
 Тестовое задание на Golang разработчика
-## Запуск
+## Нативный запуск
 С Postgres (указать нужные данные в коде)
 ```
-go run cmd/main.go -s p
+go run cmd/main.go -s p -d n
 ```
 in memory
 ```
-go run cmd/main.go -s m
+go run cmd/main.go -s m -d n
+```
+## Docker запуск
+```
+docker-compose up --build
+```
+Если нужно запустить в компоузе в режиме in-memory, то в Dockerfile нужно поменять строчку:
+```
+CMD ["./ozon_habr", "-s", "m", "-d", "d"]
 ```
 ## Работа
 Протестировать работу можно в GraphQL Playground по адресу http://localhost:8080
@@ -106,4 +114,3 @@ subscription {
 ## Доработки
 Напишу честно чего не хватает, чтобы вы не искали
 - Тесты (не успел)
-- Докер и контейнеризация (Из-за технических проблем не смог протестировать работу проекта в контейнере с компоузом, написал Dockerfile и docker-compose.yaml как умею и основываясь на предыдущих проектах)
